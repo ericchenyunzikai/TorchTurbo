@@ -836,6 +836,21 @@ class FSDP2Backend(BaseBackend):
         from torchturbo.models.modules.moe.moe_layer import BaseMoELayer, MoERuntimeInputs
 
         from .activation_checkpointing import fsdp_recompute_context, restore_moe_runtime_inputs
+        from .checkpoint_input import (
+            checkpoint_with_cpu_input,
+            checkpoint_with_large_input_offload,
+        )
+
+        checkpoint_entry = (
+            checkpoint_with_cpu_input
+            if self.config.activation_checkpointing.offload_input_to_cpu
+            else checkpoint
+        )
+        reentrant_entry = (
+            checkpoint_with_large_input_offload
+            if self.config.activation_checkpointing.offload_large_inputs_to_cpu
+            else checkpoint
+        )
 
         target_modules: list[tuple[str, nn.Module]] = []
         for fqn, submodule in model.named_modules():
@@ -926,7 +941,7 @@ class FSDP2Backend(BaseBackend):
                     return nullcontext(), recompute_context(module, False, replay_inputs)
 
                 if not use_reentrant:
-                    return checkpoint(
+                    return checkpoint_entry(
                         base_fn,
                         *args,
                         use_reentrant=False,
@@ -966,12 +981,12 @@ class FSDP2Backend(BaseBackend):
                             # skips every trainable parameter (disabled LoRA).
                             return (*outputs, _grad_anchor, is_tuple)
 
-                        *outputs, _, is_tuple = checkpoint(
+                        *outputs, _, is_tuple = reentrant_entry(
                             run_with_grad_anchor, grad_anchor, *args, use_reentrant=True
                         )
                         return tuple(outputs) if is_tuple else outputs[0]
 
-                return checkpoint(
+                return reentrant_entry(
                     run_fn,
                     *args,
                     use_reentrant=True,

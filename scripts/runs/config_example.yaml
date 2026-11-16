@@ -70,6 +70,11 @@ engine_config:
   activation_checkpointing:
     enabled: true
     use_reentrant: false
+    # Park checkpointed layer inputs on CPU between forward and backward.
+    # offload_input_to_cpu pairs with use_reentrant: false;
+    # offload_large_inputs_to_cpu pairs with use_reentrant: true.
+    offload_input_to_cpu: false
+    offload_large_inputs_to_cpu: false
 
   # Engine-managed optimizer configuration.
   optimizer:

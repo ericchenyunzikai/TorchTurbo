@@ -169,6 +169,8 @@ class TorchTurboArgs:
     gbs: int | None = None
     gradient_checkpointing: bool = True
     ac_use_reentrant: bool = False
+    ac_offload_input_to_cpu: bool = False
+    ac_offload_large_inputs_to_cpu: bool = False
     cpu_offload: CPUOffloadConfig = field(default_factory=CPUOffloadConfig)
     cpu_offload_enabled: bool | None = None
     enable_mtp: bool = False
@@ -351,6 +353,28 @@ _TURBO_ARG_SPECS: tuple[TurboArgSpec, ...] = (
         metavar="BOOL",
         help="Enable or disable TorchTurbo-owned activation checkpointing. "
         "Replaces TORCH_TURBO_GRADIENT_CHECKPOINTING.",
+    ),
+    TurboArgSpec(
+        name="ac_offload_input_to_cpu",
+        args_name="ac_offload_input_to_cpu",
+        cli_name="--tt_ac_offload_input_to_cpu",
+        env_name="TORCH_TURBO_AC_OFFLOAD_INPUT_TO_CPU",
+        config_path="activation_checkpointing.offload_input_to_cpu",
+        type=string_to_bool,
+        metavar="BOOL",
+        help="Store the first positional checkpoint tensor input on CPU between forward and backward.",
+    ),
+    TurboArgSpec(
+        name="ac_offload_large_inputs_to_cpu",
+        args_name="ac_offload_large_inputs_to_cpu",
+        cli_name="--tt_ac_offload_large_inputs_to_cpu",
+        env_name="TORCH_TURBO_AC_OFFLOAD_LARGE_INPUTS_TO_CPU",
+        config_path="activation_checkpointing.offload_large_inputs_to_cpu",
+        type=string_to_bool,
+        metavar="BOOL",
+        help="Park large reentrant-checkpoint tensor inputs in pinned host "
+        "memory between forward and backward. Requires tt_ac_use_reentrant "
+        "true.",
     ),
     TurboArgSpec(
         name="ac_use_reentrant",
