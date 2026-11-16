@@ -1,0 +1,34 @@
+scripts/runs/config_example.yaml
+  s_33663fcb9d3f09::t_6a78c8eb09c3a1 73-77
+src/torchturbo/engine/args.py
+  s_33663fcb9d3f09::t_d986b27d371893 172-173
+  s_33663fcb9d3f09::t_cbe8a706c87796 357-378
+src/torchturbo/engine/backends/fsdp2/backend.py
+  s_33663fcb9d3f09::t_27619f4a82d40f 984
+  s_33663fcb9d3f09::t_f71f1c11a7ef17 989
+  s_33663fcb9d3f09::t_3527418a7257d5 944
+  s_33663fcb9d3f09::t_e7c77255dfc9a2 839-853
+src/torchturbo/engine/backends/fsdp2/checkpoint_input.py
+  s_33663fcb9d3f09::t_6ecc0c945e44fb 1-87
+tests/engine/test_checkpoint_input_offload.py
+  s_33663fcb9d3f09::t_bb9ce09bd2f44f 1-81
+src/torchturbo/engine/config.py
+  s_33663fcb9d3f09::t_36862125926604 1135-1140
+  s_33663fcb9d3f09::t_96be1abe42f144 153-160
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "4900bf6e500dfc8caa5ffb130571b17a242b997c",
+  "prompts": {},
+  "sessions": {
+    "s_33663fcb9d3f09": {
+      "agent_id": {
+        "tool": "codefuse",
+        "id": "5d41ae5d-44cf-4d1c-8b6e-8a541949a6a9",
+        "model": "codefuse_official_channel/GLM-5.3"
+      },
+      "human_author": "ericchenyunzikai <ericchenyunzikai@outlook.com>"
+    }
+  }
+}
