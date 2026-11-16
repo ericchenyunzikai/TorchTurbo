@@ -238,3 +238,25 @@ def test_parse_torchturbo_args_mtp_log_loss():
 
     assert args.mtp_log_loss is True
     assert remaining == ["--other"]
+
+
+def test_parse_torchturbo_args_ac_input_offload():
+    from torchturbo.engine.args import parse_torchturbo_args
+
+    args, remaining = parse_torchturbo_args([])
+    assert args.ac_offload_input_to_cpu is False
+    assert args.ac_offload_large_inputs_to_cpu is False
+    assert remaining == []
+
+    args, remaining = parse_torchturbo_args(
+        ["--tt_ac_offload_input_to_cpu", "true", "--other"]
+    )
+    assert args.ac_offload_input_to_cpu is True
+    assert args.config_overrides["tt_ac_offload_input_to_cpu"] is True
+    assert remaining == ["--other"]
+
+    args, _ = parse_torchturbo_args(["--tt_ac_offload_large_inputs_to_cpu"])
+    assert args.ac_offload_large_inputs_to_cpu is True
+
+    args, _ = parse_torchturbo_args(["--tt_ac_offload_input_to_cpu=false"])
+    assert args.ac_offload_input_to_cpu is False

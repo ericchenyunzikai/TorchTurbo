@@ -719,6 +719,52 @@ def test_cli_cpu_offload_overrides_file_enabled(tmp_path, cli_value):
     )
 
 
+@pytest.mark.parametrize("value", ["true", "false"])
+def test_yaml_ac_offload_input_to_cpu_parses_string(tmp_path, value):
+    path = _write(
+        tmp_path,
+        "cfg.yaml",
+        _engine_config(
+            f'activation_checkpointing:\n  offload_input_to_cpu: "{value}"\n'
+        ),
+    )
+
+    cfg = _build_from_argv(["--tt_config", path])
+
+    assert cfg.activation_checkpointing.offload_input_to_cpu is (value == "true")
+    assert cfg.activation_checkpointing.offload_large_inputs_to_cpu is False
+
+
+def test_yaml_ac_offload_rejects_mismatched_reentrant_pairing(tmp_path):
+    path = _write(
+        tmp_path,
+        "cfg.yaml",
+        _engine_config(
+            "activation_checkpointing:\n"
+            "  use_reentrant: true\n"
+            "  offload_input_to_cpu: true\n"
+        ),
+    )
+
+    with pytest.raises(ValueError, match="non-reentrant"):
+        _build_from_argv(["--tt_config", path])
+
+
+@pytest.mark.parametrize("cli_value", ["true", "false"])
+def test_cli_ac_offload_overrides_file(tmp_path, cli_value):
+    path = _write(
+        tmp_path,
+        "cfg.yaml",
+        _engine_config("activation_checkpointing:\n  offload_input_to_cpu: false\n"),
+    )
+
+    cfg = _build_from_argv(
+        ["--tt_config", path, "--tt_ac_offload_input_to_cpu", cli_value]
+    )
+
+    assert cfg.activation_checkpointing.offload_input_to_cpu is (cli_value == "true")
+
+
 def test_file_checkpoint_export_overrides_the_default(tmp_path):
     path = _write(
         tmp_path,
