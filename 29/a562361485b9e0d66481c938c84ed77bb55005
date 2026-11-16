@@ -1,0 +1,22 @@
+tests/engine/test_engine_config_loading.py
+  s_33663fcb9d3f09::t_28dede4569df4a 722-765
+  s_33663fcb9d3f09::t_6654342215cb13 720-721
+tests/engine/test_args.py
+  s_33663fcb9d3f09::t_31fa048315f68a 241-262
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "29a562361485b9e0d66481c938c84ed77bb55005",
+  "prompts": {},
+  "sessions": {
+    "s_33663fcb9d3f09": {
+      "agent_id": {
+        "tool": "codefuse",
+        "id": "5d41ae5d-44cf-4d1c-8b6e-8a541949a6a9",
+        "model": "codefuse_official_channel/GLM-5.3"
+      },
+      "human_author": "ericchenyunzikai <ericchenyunzikai@outlook.com>"
+    }
+  }
+}
